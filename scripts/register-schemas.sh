@@ -10,11 +10,12 @@ REGISTRY_URL="${REGISTRY_URL:-http://localhost:8080/apis/registry/v2}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 echo "==> Setting global compatibility rule to BACKWARD"
-curl -fsS -X POST "$REGISTRY_URL/rules" \
+# Apicurio v2 global rules live under /admin/rules. POST creates; if it already
+# exists (409) fall back to PUT.
+curl -fsS -X POST "$REGISTRY_URL/admin/rules" \
   -H 'Content-Type: application/json' \
-  -d '{"type":"COMPATIBILITY","config":"BACKWARD"}' \
-  >/dev/null 2>&1 || \
-curl -fsS -X PUT "$REGISTRY_URL/rules/COMPATIBILITY" \
+  -d '{"type":"COMPATIBILITY","config":"BACKWARD"}' >/dev/null 2>&1 || \
+curl -fsS -X PUT "$REGISTRY_URL/admin/rules/COMPATIBILITY" \
   -H 'Content-Type: application/json' \
   -d '{"type":"COMPATIBILITY","config":"BACKWARD"}' >/dev/null
 
@@ -22,10 +23,10 @@ for schema in "$ROOT"/events/*/v*.json; do
   topic="$(basename "$(dirname "$schema")")"          # e.g. order.created
   artifact_id="${topic}-value"                         # <topic>-value convention
   echo "==> Registering $artifact_id from ${schema#$ROOT/}"
-  curl -fsS -X POST "$REGISTRY_URL/groups/events/artifacts" \
-    -H "Content-Type: application/json; artifactType=JSON" \
+  curl -fsS -X POST "$REGISTRY_URL/groups/events/artifacts?ifExists=UPDATE" \
+    -H "Content-Type: application/json" \
+    -H "X-Registry-ArtifactType: JSON" \
     -H "X-Registry-ArtifactId: ${artifact_id}" \
-    -H "X-Registry-IfExists: RETURN_OR_UPDATE" \
     --data-binary "@${schema}" >/dev/null
 done
 
