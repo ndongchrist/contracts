@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.ndongchrist/events/payment.succeeded/v1.json",
+  "title": "payment.succeeded",
+  "description": "Emitted by payment-service after a successful charge. Consumed by order-service (confirm the order).",
+  "type": "object",
+  "required": ["event_id", "payment_id", "order_id", "user_id", "amount", "currency", "succeeded_at"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "payment_id": { "type": "string", "format": "uuid" },
+    "order_id": { "type": "string", "format": "uuid" },
+    "user_id": { "type": "string" },
+    "amount": { "type": "string", "description": "Decimal as string" },
+    "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+    "succeeded_at": { "type": "string", "format": "date-time" }
+  }
+}

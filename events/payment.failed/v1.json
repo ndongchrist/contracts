@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.ndongchrist/events/payment.failed/v1.json",
+  "title": "payment.failed",
+  "description": "Emitted by payment-service when a charge is declined. Consumed by order-service (mark order payment_failed) and notification-consumer.",
+  "type": "object",
+  "required": ["event_id", "payment_id", "order_id", "user_id", "amount", "currency", "reason", "failed_at"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "payment_id": { "type": "string", "format": "uuid" },
+    "order_id": { "type": "string", "format": "uuid" },
+    "user_id": { "type": "string" },
+    "amount": { "type": "string", "description": "Decimal as string" },
+    "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+    "reason": { "type": "string" },
+    "failed_at": { "type": "string", "format": "date-time" }
+  }
+}

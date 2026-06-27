@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.ndongchrist/events/order.created/v1.json",
+  "title": "order.created",
+  "description": "Emitted by order-service after an order is persisted. Consumed by catalog-consumer (decrement stock) and payment-service (initiate charge).",
+  "type": "object",
+  "required": ["event_id", "order_id", "user_id", "items", "total_amount", "currency", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "order_id": { "type": "string", "format": "uuid" },
+    "user_id": { "type": "string" },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["product_id", "quantity", "unit_price"],
+        "additionalProperties": false,
+        "properties": {
+          "product_id": { "type": "string" },
+          "quantity": { "type": "integer", "minimum": 1 },
+          "unit_price": { "type": "string", "description": "Decimal as string to avoid float rounding" }
+        }
+      }
+    },
+    "total_amount": { "type": "string", "description": "Decimal as string" },
+    "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

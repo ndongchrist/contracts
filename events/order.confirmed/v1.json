@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.ndongchrist/events/order.confirmed/v1.json",
+  "title": "order.confirmed",
+  "description": "Emitted by order-service after payment.succeeded is processed. Consumed by notification-consumer.",
+  "type": "object",
+  "required": ["event_id", "order_id", "user_id", "confirmed_at"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "order_id": { "type": "string", "format": "uuid" },
+    "user_id": { "type": "string" },
+    "confirmed_at": { "type": "string", "format": "date-time" }
+  }
+}
